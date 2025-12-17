@@ -1,50 +1,175 @@
-# Welcome to your Expo app 👋
+# PetSnFeeds Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Мобільний застосунок для пошуку та бронювання товарів для тварин. Аналог tabletka.ua для зоотоварів.
 
-## Get started
+## Основні функції
 
-1. Install dependencies
+- 🔍 **Пошук товарів**: Швидкий пошук кормів, іграшок, аксесуарів та інших товарів для домашніх тварин
+- 🗺️ **Карта магазинів**: Перегляд розташування магазинів з цінами на товари
+- 📦 **Бронювання**: Можливість забронювати товари в обраному магазині
+- 👤 **Особистий кабінет**: Управління профілем, перегляд поточних та минулих замовлень
+- 💰 **Порівняння цін**: Порівняння цін на товари в різних магазинах
 
-   ```bash
-   npm install
-   ```
+## Технічний стек
 
-2. Start the app
+- **React Native** - фреймворк для мобільної розробки
+- **Expo** - інструменти для розробки та збірки
+- **TypeScript** - типізація коду
+- **Expo Router** - файлова навігація
+- **React Native Maps** - інтеграція карт
+- **Axios** - HTTP клієнт для API запитів
 
-   ```bash
-   npx expo start
-   ```
+## Структура проєкту
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+petsnfeeds-mobile/
+├── app/                      # Екрани застосунку (file-based routing)
+│   ├── (tabs)/              # Bottom Tab Navigation
+│   │   ├── _layout.tsx      # Layout для табів
+│   │   ├── index.tsx        # Головна сторінка (пошук)
+│   │   └── explore.tsx      # Замовлення
+│   ├── product/             # Деталі товару
+│   │   └── [id].tsx
+│   ├── order/               # Деталі замовлення
+│   │   └── [id].tsx
+│   ├── map.tsx              # Карта магазинів
+│   ├── profile.tsx          # Профіль користувача
+│   └── _layout.tsx          # Root layout
+├── components/              # Компоненти UI
+│   ├── product-card.tsx
+│   ├── search-bar.tsx
+│   ├── store-list-item.tsx
+│   └── order-card.tsx
+├── services/                # API сервіси
+│   ├── api.ts               # Базова конфігурація API
+│   ├── products.service.ts  # Сервіс товарів
+│   ├── orders.service.ts    # Сервіс замовлень
+│   ├── stores.service.ts    # Сервіс магазинів
+│   └── auth.service.ts      # Сервіс аутентифікації
+├── types/                   # TypeScript типи
+│   └── index.ts
+└── constants/               # Константи (теми, кольори)
+    └── theme.ts
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Встановлення
 
-## Learn more
+1. Клонуйте репозиторій
+2. Встановіть залежності:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+3. Налаштуйте змінні оточення:
+   Створіть файл `.env` в корені проєкту:
 
-## Join the community
+```
+EXPO_PUBLIC_API_URL=https://your-backend-api.com/api
+```
 
-Join our community of developers creating universal apps.
+4. Налаштуйте Google Maps API:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Отримайте API ключі для iOS та Android на [Google Cloud Console](https://console.cloud.google.com/)
+- Замініть `YOUR_IOS_GOOGLE_MAPS_API_KEY` та `YOUR_ANDROID_GOOGLE_MAPS_API_KEY` в `app.json`
+
+## Запуск
+
+```bash
+# Запуск development сервера
+npm start
+
+# Запуск на Android
+npm run android
+
+# Запуск на iOS
+npm run ios
+
+# Запуск web версії
+npm run web
+```
+
+## Екрани
+
+### Головна сторінка (Home)
+
+- Пошук товарів за назвою
+- Відображення популярних товарів
+- Навігація до деталей товару
+
+### Деталі товару (Product Details)
+
+- Інформація про товар (фото, опис, бренд, категорія)
+- Список магазинів з цінами
+- Відстань до магазинів
+- Наявність товару
+- Перехід на карту
+
+### Карта (Map)
+
+- Відображення магазинів на карті
+- Маркери з інформацією про магазин
+- Поточна локація користувача
+- Фільтрація по товару
+
+### Замовлення (Orders)
+
+- Таби: Поточні / Історія
+- Картки замовлень зі статусом
+- Інформація про магазин
+- Деталі замовлення
+
+### Профіль (Profile)
+
+- Особиста інформація
+- Налаштування
+- Вихід з облікового запису
+
+## Backend API
+
+Застосунок очікує наступні endpoint'и від бекенду:
+
+### Products
+
+- `GET /api/products/search?q={query}` - Пошук товарів
+- `GET /api/products/:id` - Деталі товару
+- `GET /api/products/:id/stores` - Магазини з товаром
+- `GET /api/products/popular` - Популярні товари
+
+### Orders
+
+- `POST /api/orders` - Створити замовлення
+- `GET /api/orders` - Отримати замовлення користувача
+- `GET /api/orders/:id` - Деталі замовлення
+- `POST /api/orders/:id/cancel` - Скасувати замовлення
+- `GET /api/orders/active` - Поточні замовлення
+- `GET /api/orders/history` - Історія замовлень
+
+### Stores
+
+- `GET /api/stores` - Всі магазини
+- `GET /api/stores/:id` - Деталі магазину
+- `GET /api/stores/nearby?lat={lat}&lng={lng}` - Найближчі магазини
+
+### Auth
+
+- `POST /api/auth/login` - Вхід
+- `POST /api/auth/register` - Реєстрація
+- `GET /api/auth/me` - Поточний користувач
+- `PUT /api/auth/profile` - Оновити профіль
+- `POST /api/auth/logout` - Вихід
+
+## TODO
+
+- [ ] Додати аутентифікацію з SecureStore
+- [ ] Реалізувати кошик для множинного бронювання
+- [ ] Додати push-сповіщення про статус замовлень
+- [ ] Реалізувати фільтри та сортування
+- [ ] Додати улюблені товари
+- [ ] Інтегрувати платіжні системи
+- [ ] Додати відгуки та рейтинги магазинів
+- [ ] Реалізувати темну тему
+
+## Ліцензія
+
+MIT
