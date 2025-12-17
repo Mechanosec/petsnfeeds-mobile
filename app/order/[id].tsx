@@ -242,7 +242,7 @@ export default function OrderDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#1a1a1a",
   },
   scrollView: {
     flex: 1,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   statusCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     padding: 16,
     marginBottom: 16,
     alignItems: "center",
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
   orderDate: {
     fontSize: 13,
-    color: "#666",
+    color: "#a3a3a3",
     marginTop: 4,
   },
   section: {
@@ -279,25 +279,25 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#999",
+    color: "#737373",
     textTransform: "uppercase",
     paddingHorizontal: 16,
     marginBottom: 8,
     letterSpacing: 0.5,
   },
   storeCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     padding: 16,
   },
   storeName: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#333",
+    color: "#e5e5e5",
     marginBottom: 8,
   },
   storeAddress: {
     fontSize: 14,
-    color: "#666",
+    color: "#a3a3a3",
     marginBottom: 4,
   },
   storePhone: {
@@ -307,10 +307,10 @@ const styles = StyleSheet.create({
   },
   storeHours: {
     fontSize: 13,
-    color: "#999",
+    color: "#737373",
   },
   pickupCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     padding: 16,
     flexDirection: "row",
     alignItems: "center",
@@ -319,15 +319,15 @@ const styles = StyleSheet.create({
   pickupTime: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#e5e5e5",
   },
   itemCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     padding: 16,
     flexDirection: "row",
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#333333",
   },
   itemInfo: {
     flex: 1,
@@ -336,28 +336,28 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#333",
+    color: "#e5e5e5",
     marginBottom: 4,
   },
   itemBrand: {
     fontSize: 13,
-    color: "#666",
+    color: "#a3a3a3",
   },
   itemPricing: {
     alignItems: "flex-end",
   },
   itemQuantity: {
     fontSize: 13,
-    color: "#666",
+    color: "#a3a3a3",
     marginBottom: 4,
   },
   itemPrice: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#333",
+    color: "#e5e5e5",
   },
   totalSection: {
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     padding: 16,
     marginBottom: 16,
   },
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: "#e5e5e5",
   },
   totalAmount: {
     fontSize: 24,
@@ -394,6 +394,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#999",
+    color: "#a3a3a3",
   },
 });

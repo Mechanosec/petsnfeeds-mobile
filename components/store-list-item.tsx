@@ -14,14 +14,19 @@ interface StoreListItemProps {
   productInStore: ProductInStore;
   onPress: (storeId: string) => void;
   onMapPress: (storeId: string) => void;
+  onAddToCart?: (store: ProductInStore) => void;
+  showAddButton?: boolean;
 }
 
 export function StoreListItem({
   productInStore,
   onPress,
   onMapPress,
+  onAddToCart,
+  showAddButton = false,
 }: StoreListItemProps) {
   const { store, price, availability } = productInStore;
+  const isAvailable = availability !== "out_of_stock";
 
   const getAvailabilityColor = () => {
     switch (availability) {
@@ -89,22 +94,39 @@ export function StoreListItem({
         </View>
         <Text style={styles.hours}>{store.workingHours}</Text>
       </View>
+
+      {showAddButton && onAddToCart && (
+        <TouchableOpacity
+          style={[styles.addButton, !isAvailable && styles.addButtonDisabled]}
+          onPress={() => onAddToCart(productInStore)}
+          disabled={!isAvailable}
+        >
+          <Ionicons
+            name="cart"
+            size={18}
+            color={isAvailable ? "#ffffff" : "#737373"}
+          />
+          <Text
+            style={[
+              styles.addButtonText,
+              !isAvailable && styles.addButtonTextDisabled,
+            ]}
+          >
+            {isAvailable ? "Додати в кошик" : "Немає в наявності"}
+          </Text>
+        </TouchableOpacity>
+      )}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: "#2a2a2a",
     borderRadius: 12,
     padding: 16,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#333333",
   },
   pressed: {
     opacity: 0.7,
@@ -124,18 +146,18 @@ const styles = StyleSheet.create({
   storeName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#e5e5e5",
   },
   distance: {
     fontSize: 14,
-    color: "#666",
+    color: "#a3a3a3",
   },
   mapButton: {
     padding: 4,
   },
   address: {
     fontSize: 14,
-    color: "#666",
+    color: "#a3a3a3",
     marginBottom: 12,
   },
   footer: {
@@ -151,7 +173,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#2196F3",
+    color: "#10b981",
   },
   badge: {
     paddingHorizontal: 8,
@@ -164,6 +186,27 @@ const styles = StyleSheet.create({
   },
   hours: {
     fontSize: 12,
-    color: "#999",
+    color: "#737373",
+  },
+  addButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: "#10b981",
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 12,
+  },
+  addButtonDisabled: {
+    backgroundColor: "#2a2a2a",
+  },
+  addButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  addButtonTextDisabled: {
+    color: "#737373",
   },
 });

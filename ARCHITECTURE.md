@@ -1,8 +1,8 @@
-# Архітектура застосунку PetSnFeeds
+# Архітектура застосунку Pets&Feed
 
 ## Огляд
 
-PetSnFeeds - це мобільний застосунок на React Native Expo для пошуку та бронювання товарів для тварин. Застосунок використовує file-based routing через Expo Router та TypeScript для type safety.
+Pets&Feed - це мобільний застосунок на React Native Expo для пошуку та бронювання товарів для тварин. Застосунок використовує file-based routing через Expo Router та TypeScript для type safety.
 
 ## Структура проєкту
 

@@ -10,14 +10,23 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#2196F3",
-        tabBarInactiveTintColor: "#999",
+        tabBarActiveTintColor: "#10b981",
+        tabBarInactiveTintColor: "#737373",
         headerShown: true,
+        headerStyle: {
+          backgroundColor: "#1f1f1f",
+        },
+        headerTintColor: "#e5e5e5",
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
+            backgroundColor: "#1f1f1f",
+            borderTopColor: "#333333",
           },
-          default: {},
+          default: {
+            backgroundColor: "#1f1f1f",
+            borderTopColor: "#333333",
+          },
         }),
       }}
     >
@@ -28,18 +37,18 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => router.push("/profile")}
-              style={{ marginRight: 16 }}
-            >
-              <Ionicons
-                name="person-circle-outline"
-                size={28}
-                color="#2196F3"
-              />
-            </TouchableOpacity>
-          ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => router.push("/profile")}
+                style={{ marginRight: 16 }}
+              >
+                <Ionicons
+                  name="person-circle-outline"
+                  size={28}
+                  color="#10b981"
+                />
+              </TouchableOpacity>
+            ),
         }}
       />
       <Tabs.Screen
@@ -54,15 +63,15 @@ export default function TabLayout() {
               onPress={() => router.push("/profile")}
               style={{ marginRight: 16 }}
             >
-              <Ionicons
-                name="person-circle-outline"
-                size={28}
-                color="#2196F3"
-              />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-    </Tabs>
-  );
-}
+                <Ionicons
+                  name="person-circle-outline"
+                  size={28}
+                  color="#10b981"
+                />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+      </Tabs>
+    );
+  }

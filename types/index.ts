@@ -1,4 +1,4 @@
-// Core types for PetSnFeeds app
+// Core types for Pets&Feed app
 
 export interface Product {
   id: string;

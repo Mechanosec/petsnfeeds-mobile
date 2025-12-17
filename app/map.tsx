@@ -1,12 +1,23 @@
 // Map Screen - Show stores on map
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { productsService } from "../services/products.service";
 import { storesService } from "../services/stores.service";
 import { ProductInStore, Store } from "../types";
+
+// Conditional import for native platforms only
+let MapView: any;
+let Marker: any;
+let PROVIDER_DEFAULT: any;
+
+if (Platform.OS !== "web") {
+  const maps = require("react-native-maps");
+  MapView = maps.default;
+  Marker = maps.Marker;
+  PROVIDER_DEFAULT = maps.PROVIDER_DEFAULT;
+}
 
 export default function MapScreen() {
   const { storeId, productId } = useLocalSearchParams();
@@ -73,6 +84,37 @@ export default function MapScreen() {
         <Stack.Screen options={{ title: "Карта магазинів" }} />
         <ActivityIndicator size="large" color="#2196F3" />
       </View>
+    );
+  }
+
+  // Web fallback - maps not supported on web
+  if (Platform.OS === "web") {
+    return (
+      <SafeAreaView style={styles.container} edges={["bottom"]}>
+        <Stack.Screen
+          options={{
+            title: "Карта магазинів",
+            headerBackTitle: "Назад",
+          }}
+        />
+        <View style={styles.webFallback}>
+          <Text style={styles.webFallbackTitle}>Карта недоступна на web</Text>
+          <Text style={styles.webFallbackText}>
+            Для перегляду карти магазинів використовуйте Android або iOS застосунок
+          </Text>
+          {stores.length > 0 && (
+            <View style={styles.storesList}>
+              <Text style={styles.storesListTitle}>Знайдено магазинів: {stores.length}</Text>
+              {stores.map((store) => (
+                <View key={store.id} style={styles.webStoreItem}>
+                  <Text style={styles.webStoreName}>{store.name}</Text>
+                  <Text style={styles.webStoreAddress}>{store.address}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -143,5 +185,58 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
+  },
+  webFallback: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+    backgroundColor: "#f5f5f5",
+  },
+  webFallbackTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  webFallbackText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 24,
+  },
+  storesList: {
+    width: "100%",
+    maxWidth: 600,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  storesListTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: 16,
+  },
+  webStoreItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  webStoreName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 4,
+  },
+  webStoreAddress: {
+    fontSize: 14,
+    color: "#666",
   },
 });

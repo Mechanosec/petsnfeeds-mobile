@@ -1,6 +1,11 @@
 // Authentication Service
 import { User } from "../types";
 import { apiClient } from "./api";
+import { Config } from "../constants/config";
+import { mockUser } from "../mocks/data";
+
+// Helper function to simulate API delay
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const authService = {
   // Login
@@ -26,6 +31,11 @@ export const authService = {
 
   // Get current user
   getCurrentUser: async (): Promise<User> => {
+    if (Config.USE_MOCK_DATA) {
+      await delay(Config.MOCK_API_DELAY);
+      return mockUser;
+    }
+    
     const response = await apiClient.get("/auth/me");
     return response.data;
   },

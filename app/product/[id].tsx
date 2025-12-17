@@ -4,6 +4,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -13,15 +14,18 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StoreListItem } from "../../components/store-list-item";
+import { useCart } from "../../contexts/cart-context";
 import { productsService } from "../../services/products.service";
 import { Product, ProductInStore } from "../../types";
 
 export default function ProductDetailsScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [stores, setStores] = useState<ProductInStore[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAllStores, setShowAllStores] = useState(false);
 
   useEffect(() => {
     loadProductDetails();
@@ -53,11 +57,25 @@ export default function ProductDetailsScreen() {
     router.push(`/map?storeId=${storeId}&productId=${id}`);
   };
 
+  const handleAddToCart = (store: ProductInStore) => {
+    if (!product) return;
+
+    addToCart(product, store, 1);
+    Alert.alert(
+      "Додано в кошик",
+      `${product.name} додано в кошик з ${store.storeName}`,
+      [
+        { text: "Продовжити покупки", style: "cancel" },
+        { text: "Перейти в кошик", onPress: () => router.push("/cart") },
+      ]
+    );
+  };
+
   if (loading) {
     return (
       <View style={styles.centered}>
         <Stack.Screen options={{ title: "Завантаження..." }} />
-        <ActivityIndicator size="large" color="#2196F3" />
+        <ActivityIndicator size="large" color="#10b981" />
       </View>
     );
   }
@@ -70,6 +88,20 @@ export default function ProductDetailsScreen() {
       </View>
     );
   }
+
+  // Calculate price statistics
+  const prices = stores
+    .filter((s) => s.availability !== "out_of_stock")
+    .map((s) => s.price);
+  const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+  const maxPrice = prices.length > 0 ? Math.max(...prices) : 0;
+  const availableStoresCount = stores.filter(
+    (s) => s.availability !== "out_of_stock"
+  ).length;
+
+  // Show first 3 stores or all if expanded
+  const displayedStores = showAllStores ? stores : stores.slice(0, 3);
+  const hasMoreStores = stores.length > 3;
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
@@ -87,58 +119,117 @@ export default function ProductDetailsScreen() {
         />
 
         <View style={styles.content}>
-          <View style={styles.header}>
-            <View style={styles.headerText}>
-              <Text style={styles.productName}>{product.name}</Text>
-              <Text style={styles.brand}>{product.brand}</Text>
-            </View>
+          {/* Product Info */}
+          <View style={styles.productHeader}>
             <View style={styles.categoryBadge}>
               <Text style={styles.categoryText}>{product.category}</Text>
             </View>
+            <Text style={styles.productName}>{product.name}</Text>
+            <Text style={styles.brand}>{product.brand}</Text>
           </View>
 
-          <Text style={styles.description}>{product.description}</Text>
-
-          {product.tags && product.tags.length > 0 && (
-            <View style={styles.tagsContainer}>
-              {product.tags.map((tag, index) => (
-                <View key={index} style={styles.tag}>
-                  <Text style={styles.tagText}>{tag}</Text>
-                </View>
-              ))}
+          {/* Price Range */}
+          {availableStoresCount > 0 && (
+            <View style={styles.priceSection}>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceFrom}>від {minPrice}₴</Text>
+                {minPrice !== maxPrice && (
+                  <Text style={styles.priceTo}>до {maxPrice}₴</Text>
+                )}
+              </View>
+              <Text style={styles.storesCount}>
+                В наявності у {availableStoresCount}{" "}
+                {availableStoresCount === 1
+                  ? "магазині"
+                  : availableStoresCount < 5
+                  ? "магазинах"
+                  : "магазинах"}
+              </Text>
             </View>
           )}
 
           <View style={styles.divider} />
 
-          <View style={styles.storesHeader}>
-            <Text style={styles.storesTitle}>Магазини ({stores.length})</Text>
-            <TouchableOpacity
-              style={styles.viewAllMapButton}
-              onPress={() => router.push(`/map?productId=${id}`)}
-            >
-              <Ionicons name="map-outline" size={20} color="#2196F3" />
-              <Text style={styles.viewAllMapText}>Усі на мапі</Text>
-            </TouchableOpacity>
+          {/* Description */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Опис</Text>
+            <Text style={styles.description}>{product.description}</Text>
           </View>
 
-          {stores.length === 0 ? (
-            <View style={styles.emptyStores}>
-              <Ionicons name="sad-outline" size={48} color="#ccc" />
-              <Text style={styles.emptyStoresText}>
-                На жаль, цей товар зараз недоступний
-              </Text>
+          {/* Tags */}
+          {product.tags && product.tags.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Особливості</Text>
+              <View style={styles.tagsContainer}>
+                {product.tags.map((tag, index) => (
+                  <View key={index} style={styles.tag}>
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={16}
+                      color="#10b981"
+                    />
+                    <Text style={styles.tagText}>{tag}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
-          ) : (
-            stores.map((store) => (
-              <StoreListItem
-                key={store.storeId}
-                productInStore={store}
-                onPress={handleStorePress}
-                onMapPress={handleMapPress}
-              />
-            ))
           )}
+
+          <View style={styles.divider} />
+
+          {/* Stores Section */}
+          <View style={styles.section}>
+            <View style={styles.storesHeader}>
+              <Text style={styles.storesTitle}>
+                Де купити ({stores.length})
+              </Text>
+              <TouchableOpacity
+                style={styles.mapButton}
+                onPress={() => router.push(`/map?productId=${id}`)}
+              >
+                <Ionicons name="map-outline" size={20} color="#10b981" />
+                <Text style={styles.mapButtonText}>Мапа</Text>
+              </TouchableOpacity>
+            </View>
+
+            {stores.length === 0 ? (
+              <View style={styles.emptyStores}>
+                <Ionicons name="sad-outline" size={48} color="#737373" />
+                <Text style={styles.emptyStoresText}>
+                  На жаль, цей товар зараз недоступний
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.storesList}>
+                {displayedStores.map((store) => (
+                  <StoreListItem
+                    key={store.storeId}
+                    productInStore={store}
+                    onPress={handleStorePress}
+                    onMapPress={handleMapPress}
+                    onAddToCart={handleAddToCart}
+                    showAddButton={true}
+                  />
+                ))}
+                {hasMoreStores && !showAllStores && (
+                  <TouchableOpacity
+                    style={styles.showMoreButton}
+                    onPress={() => setShowAllStores(true)}
+                  >
+                    <Text style={styles.showMoreText}>
+                      Показати ще {stores.length - 3}{" "}
+                      {stores.length - 3 === 1
+                        ? "магазин"
+                        : stores.length - 3 < 5
+                        ? "магазини"
+                        : "магазинів"}
+                    </Text>
+                    <Ionicons name="chevron-down" size={20} color="#10b981" />
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -148,7 +239,7 @@ export default function ProductDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#1a1a1a",
   },
   scrollView: {
     flex: 1,
@@ -161,68 +252,100 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 300,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#242424",
   },
   content: {
     padding: 16,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 12,
+  productHeader: {
+    marginBottom: 16,
   },
-  headerText: {
-    flex: 1,
-    marginRight: 12,
+  categoryBadge: {
+    backgroundColor: "#065f46",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: "flex-start",
+    marginBottom: 8,
+  },
+  categoryText: {
+    fontSize: 11,
+    color: "#34d399",
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   productName: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#333",
-    marginBottom: 4,
+    color: "#e5e5e5",
+    marginBottom: 6,
+    lineHeight: 32,
   },
   brand: {
     fontSize: 16,
-    color: "#666",
+    color: "#a3a3a3",
+    fontWeight: "500",
   },
-  categoryBadge: {
-    backgroundColor: "#e8f5e9",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+  priceSection: {
+    marginBottom: 20,
   },
-  categoryText: {
-    fontSize: 13,
-    color: "#4caf50",
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 12,
+    marginBottom: 8,
+  },
+  priceFrom: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#10b981",
+  },
+  priceTo: {
+    fontSize: 24,
     fontWeight: "600",
+    color: "#34d399",
+  },
+  storesCount: {
+    fontSize: 14,
+    color: "#a3a3a3",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#333333",
+    marginVertical: 20,
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#e5e5e5",
+    marginBottom: 12,
   },
   description: {
     fontSize: 15,
-    color: "#666",
-    lineHeight: 22,
-    marginBottom: 16,
+    color: "#c9c9c9",
+    lineHeight: 24,
   },
   tagsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
-    marginBottom: 16,
+    gap: 10,
   },
   tag: {
-    backgroundColor: "#e3f2fd",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "#2a2a2a",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
   tagText: {
-    fontSize: 12,
-    color: "#2196F3",
-  },
-  divider: {
-    height: 1,
-    backgroundColor: "#e0e0e0",
-    marginVertical: 16,
+    fontSize: 14,
+    color: "#e5e5e5",
   },
   storesHeader: {
     flexDirection: "row",
@@ -231,18 +354,38 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   storesTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
-    color: "#333",
+    color: "#e5e5e5",
   },
-  viewAllMapButton: {
+  mapButton: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
-  viewAllMapText: {
+  mapButtonText: {
     fontSize: 14,
-    color: "#2196F3",
+    color: "#10b981",
+    fontWeight: "600",
+  },
+  storesList: {
+    gap: 12,
+  },
+  showMoreButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 14,
+    marginTop: 8,
+    backgroundColor: "#2a2a2a",
+    borderRadius: 12,
+  },
+  showMoreText: {
+    fontSize: 14,
+    color: "#10b981",
     fontWeight: "600",
   },
   emptyStores: {
@@ -251,12 +394,12 @@ const styles = StyleSheet.create({
   },
   emptyStoresText: {
     fontSize: 16,
-    color: "#999",
+    color: "#a3a3a3",
     textAlign: "center",
     marginTop: 16,
   },
   errorText: {
     fontSize: 16,
-    color: "#999",
+    color: "#a3a3a3",
   },
 });

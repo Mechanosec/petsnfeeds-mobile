@@ -127,43 +127,48 @@ export default function OrdersScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#1a1a1a",
   },
   header: {
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 12,
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
   },
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#333",
+    color: "#e5e5e5",
   },
   tabs: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     paddingHorizontal: 16,
     paddingBottom: 12,
     gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#333333",
   },
   tab: {
     flex: 1,
     paddingVertical: 10,
     alignItems: "center",
-    borderRadius: 8,
-    backgroundColor: "#f5f5f5",
+    borderRadius: 12,
+    backgroundColor: "#2a2a2a",
+    borderWidth: 1,
+    borderColor: "#404040",
   },
   activeTab: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#10b981",
+    borderColor: "#10b981",
   },
   tabText: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#666",
+    color: "#a3a3a3",
   },
   activeTabText: {
-    color: "#fff",
+    color: "#ffffff",
   },
   listContent: {
     paddingVertical: 8,
@@ -180,13 +185,13 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#999",
+    color: "#a3a3a3",
     marginBottom: 8,
     textAlign: "center",
   },
   emptySubtext: {
     fontSize: 14,
-    color: "#bbb",
+    color: "#737373",
     textAlign: "center",
   },
 });

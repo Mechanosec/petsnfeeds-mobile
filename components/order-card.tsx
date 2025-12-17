@@ -14,8 +14,8 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
     switch (order.status) {
       case "pending":
         return "#ff9800";
-      case "reserved":
-        return "#2196F3";
+    case "reserved":
+      return "#3b82f6";
       case "ready":
         return "#4caf50";
       case "completed":
@@ -129,16 +129,13 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: "#2a2a2a",
     borderRadius: 12,
     padding: 16,
     marginHorizontal: 16,
-    marginVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    marginVertical: 6,
+    borderWidth: 1,
+    borderColor: "#333333",
   },
   pressed: {
     opacity: 0.7,
@@ -152,12 +149,12 @@ const styles = StyleSheet.create({
   orderId: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#e5e5e5",
     marginBottom: 4,
   },
   date: {
     fontSize: 13,
-    color: "#999",
+    color: "#737373",
   },
   statusBadge: {
     flexDirection: "row",
@@ -173,7 +170,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#404040",
     marginBottom: 12,
   },
   storeInfo: {
@@ -184,7 +181,7 @@ const styles = StyleSheet.create({
   },
   storeName: {
     fontSize: 14,
-    color: "#666",
+    color: "#a3a3a3",
     flex: 1,
   },
   itemsInfo: {
@@ -195,12 +192,12 @@ const styles = StyleSheet.create({
   },
   itemsText: {
     fontSize: 14,
-    color: "#666",
+    color: "#a3a3a3",
   },
   totalAmount: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#2196F3",
+    color: "#10b981",
   },
   pickupInfo: {
     flexDirection: "row",
@@ -209,10 +206,10 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#f0f0f0",
+    borderTopColor: "#404040",
   },
   pickupText: {
     fontSize: 13,
-    color: "#666",
+    color: "#a3a3a3",
   },
 });

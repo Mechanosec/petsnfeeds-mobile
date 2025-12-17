@@ -2,6 +2,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { getProductPriceRange } from "../mocks/data";
 import { Product } from "../types";
 
 interface ProductCardProps {
@@ -10,6 +11,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onPress }: ProductCardProps) {
+  const { minPrice } = getProductPriceRange(product.id);
+
   return (
     <Pressable
       style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
@@ -21,17 +24,21 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
         resizeMode="cover"
       />
       <View style={styles.content}>
+        <Text style={styles.category} numberOfLines={1}>
+          {product.category}
+        </Text>
         <Text style={styles.name} numberOfLines={2}>
           {product.name}
         </Text>
         <Text style={styles.brand} numberOfLines={1}>
           {product.brand}
         </Text>
-        <View style={styles.footer}>
-          <View style={styles.categoryBadge}>
-            <Text style={styles.categoryText}>{product.category}</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color="#999" />
+        <View style={styles.priceContainer}>
+          <Ionicons name="pricetag" size={14} color="#10b981" />
+          <Text style={styles.priceLabel}>від</Text>
+          <Text style={styles.price}>
+            {minPrice > 0 ? `${minPrice.toFixed(0)}₴` : "—"}
+          </Text>
         </View>
       </View>
     </Pressable>
@@ -40,53 +47,63 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#2a2a2a",
     borderRadius: 12,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    marginBottom: 12,
     overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#333333",
+    flex: 1,
+    maxWidth: "48%",
   },
   cardPressed: {
     opacity: 0.7,
+    transform: [{ scale: 0.98 }],
   },
   image: {
     width: "100%",
-    height: 180,
-    backgroundColor: "#f5f5f5",
+    height: 140,
+    backgroundColor: "#1a1a1a",
   },
   content: {
-    padding: 12,
+    padding: 10,
+  },
+  category: {
+    fontSize: 10,
+    color: "#34d399",
+    fontWeight: "600",
+    textTransform: "uppercase",
+    marginBottom: 4,
+    letterSpacing: 0.5,
   },
   name: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "600",
-    color: "#333",
+    color: "#e5e5e5",
     marginBottom: 4,
+    height: 36,
   },
   brand: {
-    fontSize: 14,
-    color: "#666",
+    fontSize: 12,
+    color: "#737373",
     marginBottom: 8,
   },
-  footer: {
+  priceContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    gap: 4,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#404040",
   },
-  categoryBadge: {
-    backgroundColor: "#e8f5e9",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+  priceLabel: {
+    fontSize: 11,
+    color: "#a3a3a3",
   },
-  categoryText: {
-    fontSize: 12,
-    color: "#4caf50",
-    fontWeight: "500",
+  price: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#10b981",
+    flex: 1,
   },
 });

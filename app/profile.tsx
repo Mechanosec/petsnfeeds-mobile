@@ -171,7 +171,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#1a1a1a",
   },
   scrollView: {
     flex: 1,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     paddingVertical: 32,
     marginBottom: 16,
   },
@@ -205,22 +205,22 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#333",
+    color: "#e5e5e5",
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 14,
-    color: "#666",
+    color: "#a3a3a3",
   },
   section: {
-    backgroundColor: "#fff",
+    backgroundColor: "#1f1f1f",
     marginBottom: 16,
     paddingVertical: 8,
   },
   sectionTitle: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#999",
+    color: "#737373",
     textTransform: "uppercase",
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#333333",
   },
   infoIcon: {
     width: 40,
@@ -243,12 +243,12 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 12,
-    color: "#999",
+    color: "#737373",
     marginBottom: 2,
   },
   infoValue: {
     fontSize: 15,
-    color: "#333",
+    color: "#e5e5e5",
   },
   menuItem: {
     flexDirection: "row",
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#333333",
   },
   menuItemLeft: {
     flexDirection: "row",
@@ -266,18 +266,20 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 16,
-    color: "#333",
+    color: "#e5e5e5",
   },
   logoutButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    backgroundColor: "#fff",
+    backgroundColor: "#2a2a2a",
     marginHorizontal: 16,
     marginTop: 16,
     paddingVertical: 14,
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#404040",
   },
   logoutText: {
     fontSize: 16,
@@ -287,11 +289,11 @@ const styles = StyleSheet.create({
   versionText: {
     textAlign: "center",
     fontSize: 12,
-    color: "#ccc",
+    color: "#737373",
     marginVertical: 24,
   },
   errorText: {
     fontSize: 16,
-    color: "#999",
+    color: "#a3a3a3",
   },
 });
